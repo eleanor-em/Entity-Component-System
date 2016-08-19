@@ -8,6 +8,10 @@ namespace ECS {
         public class Prototype {
             private List<Type> components;
 
+            public Prototype() {
+                components = new List<Type>();
+            }
+
             public Prototype AddComponent<ComponentType>()
                 where ComponentType : Components.Component {
                 Type type = typeof(ComponentType);
@@ -33,6 +37,7 @@ namespace ECS {
         public Engine() {
             systems = new Dictionary<Type, Systems.System>();
             entities = new List<Entity>();
+            prototypes = new Dictionary<String, Prototype>();
         }
 
         public Prototype AddPrototype(String name) {

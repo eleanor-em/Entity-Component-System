@@ -38,7 +38,10 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Colliders\Circle.cs" />
+    <Compile Include="Colliders\Collider.cs" />
     <Compile Include="Components\BallSprite.cs" />
+    <Compile Include="Components\Collidable.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Position.cs" />
     <Compile Include="Components\Velocity.cs" />

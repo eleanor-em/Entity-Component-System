@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ECS {
     public class Game1 : Game {
@@ -8,8 +9,13 @@ namespace ECS {
         SpriteBatch spriteBatch;
         Engine engine;
 
+        public const int Width = 1280;
+        public const int Height = 720;
+
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = Width;
+            graphics.PreferredBackBufferHeight = Height;
             Content.RootDirectory = "Content";
         }
 
@@ -25,14 +31,30 @@ namespace ECS {
                   .LoadTexture(this, "ball", "ball");
             engine.AddSystem<Systems.BallControl>();
 
-            Entity ball = engine.AddEntity()
-                                .AddComponent<ECS.Components.Position>()
-                                .AddComponent<ECS.Components.Velocity>()
-                                .AddComponent<ECS.Components.BallSprite>();
-            ball.GetComponent<ECS.Components.Position>()
-                .pos = new Vector2(100, 100);
-            ball.GetComponent<ECS.Components.Velocity>()
-                .vel = new Vector2(1, 1);
+            Random random = new Random();
+
+            for (int i = 0; i < 10; ++i) {
+                Entity ball = engine.AddEntity()
+                                    .AddComponent<ECS.Components.Position>()
+                                    .AddComponent<ECS.Components.Velocity>()
+                                    .AddComponent<ECS.Components.BallSprite>()
+                                    .AddComponent<ECS.Components.Collidable>();
+                ball.GetComponent<ECS.Components.Position>()
+                    .pos = new Vector2((float)random.NextDouble() * Width,
+                                       (float)random.NextDouble() * Height);
+
+                var collider = ball.GetComponent<ECS.Components.Collidable>();
+                var circle = new Colliders.Circle();
+
+                collider.mass = random.Next(1, 10);
+                circle.Radius = collider.mass * Systems.Renderer.ScaleFactor * 48;
+                collider.collider = circle;
+
+                float MaxVel = 10f / collider.mass;
+                ball.GetComponent<ECS.Components.Velocity>()
+                    .vel = new Vector2((float)random.NextDouble() * MaxVel,
+                                       (float)random.NextDouble() * MaxVel);
+            }
         }
 
         /// <summary>
